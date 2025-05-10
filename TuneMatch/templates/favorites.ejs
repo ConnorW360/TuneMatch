@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Favorites</title>  
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="container">
+        <h1>Your Favorites</h1>
+        <% if (favs.length === 0) { %>
+          <p>You have no favorites yet. Go match with some music!</p>
+        <% } else { %>
+        <table class="results-table">
+            <thead>
+              <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Link</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% favs.forEach(fav => { %>
+                <tr>
+                    <td>
+                      <% if (fav.imageUrl) { %>
+                        <img src="<%= fav.imageUrl %>" alt="Album Art for <%= fav.title %>" style="width: 100px; height: 100px; vertical-align: middle;">
+                      <% } else { %>
+                        —
+                      <% } %>
+                    </td>
+                  <td><%= fav.title %></td>
+                  <td><%= fav.artist %></td>
+                  <td>
+                    <a href="<%= fav.externalUrl %>" target="_blank">Open in Spotify</a>
+                  </td>
+                  <td>
+                    <form action="/favorites/remove" method="post" onsubmit="return confirm('Remove <%= fav.title %> by <%= fav.artist %> from favorites?');">
+                        <input type="hidden" name="id" value="<%= fav._id %>">
+                        <button>✖</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <form action="/favorites/clear" method="post" onsubmit="return confirm('Are you sure you want to remove ALL favorites?');">
+            <button class="home-link" type="submit">Remove All Favorites</button>
+          </form>
+        <% } %>
+          <hr><br>
+          <a class="home-link" href="/">Home</a> <a class="home-link outline" href="/search">Search Again</a>
+        <script src="server.js"></script>
+    </body>
+</html>
